@@ -1,0 +1,301 @@
+
+%EXPERIMENT 2 
+
+%%
+
+% Load in the data
+
+%% Project sensor data to sources as to make a baseline. 
+
+sources_0_ses1 = kernel_sub03 * sensors_sub03_ses01;
+sources_0_ses2 = kernel_sub03 * sensors_sub03_ses02;
+
+%% FOR SUBJECT ONE, SESSION ONE, HEAD ONE %% 
+
+% Combine source data and head models. 
+sources_sub01_ses01_head01 = kernel_sub01 * (pinv(kernel_sub01) * sources_0_ses1);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub01_ses01_head01(:,i)=filtfilt(b,a,mean(sources_sub01_ses01_head01(atlas_sub01{i},200:npoints),1));
+end
+
+
+% Make connectivity matrix 
+
+con_matrix111 = corr(ts_sub01_ses01_head01);
+% Plot connectivity matrix
+
+
+figure;
+imagesc(con_matrix111);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%% SUBJECT ONE, SESSION TWO, HEAD ONE %% 
+
+sources_sub01_ses02_head01 = kernel_sub01 * (pinv(kernel_sub01) * sources_0_ses2);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub01_ses02_head01(:,i)=filtfilt(b,a,mean(sources_sub01_ses02_head01(atlas_sub01{i},200:npoints),1));
+end
+
+% Make connectivity matrix 
+
+con_matrix121 = corr(ts_sub01_ses02_head01);
+
+
+% Plot connectivity matrix
+
+
+figure;
+imagesc(con_matrix121);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%% SUBJECT ONE, SESSION ONE, HEAD TWO %% 
+
+sources_sub01_ses01_head02 = kernel_sub02 * (pinv(kernel_sub02) * sources_0_ses1);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub01_ses01_head02(:,i)=filtfilt(b,a,mean(sources_sub01_ses01_head02(atlas_sub02{i},200:npoints),1));
+end
+
+% Make connectivity matrix 
+
+con_matrix112 = corr(ts_sub01_ses01_head02);
+
+
+% Plot connectivity matrix
+
+
+figure;
+imagesc(con_matrix112);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%% SUBJECT ONE, SESSION TWO, HEAD TWO %% 
+
+sources_sub01_ses02_head02 = kernel_sub02 * (pinv(kernel_sub02) * sources_0_ses2);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub01_ses02_head02(:,i)=filtfilt(b,a,mean(sources_sub01_ses02_head02(atlas_sub02{i},200:npoints),1));
+end
+
+% Make connectivity matrix 
+
+con_matrix122 = corr(ts_sub01_ses02_head02);
+
+
+% Plot connectivity matrix
+
+
+figure;
+imagesc(con_matrix122);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%% SUBJECT TWO, SESSION ONE, HEAD TWO %%
+
+sources_sub02_ses01_head02 = kernel_sub02 * (pinv(kernel_sub02) * sources_0_ses1);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub02_ses01_head02(:,i)=filtfilt(b,a,mean(sources_sub02_ses01_head02(atlas_sub02{i},200:npoints),1));
+end
+
+% Make connectivity matrix 
+
+con_matrix212 = corr(ts_sub02_ses01_head02);
+
+
+% Plot connectivity matrix
+
+
+figure;
+imagesc(con_matrix212);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%% SUBJECT TWO, SESSION ONE, HEAD ONE %% 
+
+sources_sub02_ses01_head01 = kernel_sub01 * (pinv(kernel_sub01) * sources_0_ses1);
+
+% Filter + apply atlas 
+
+nregions = 68;
+npoints = 6000;
+
+fs=600;
+
+[b,a]=butter(3,[.5 48]/(fs/2));
+
+for i=1:nregions
+
+    ts_sub02_ses01_head01(:,i)=filtfilt(b,a,mean(sources_sub02_ses01_head01(atlas_sub01{i},200:npoints),1));
+end
+
+% Make connectivity matrix 
+
+con_matrix211 = corr(ts_sub02_ses01_head01);
+
+
+% Plot connectivity matrix
+
+figure;
+imagesc(con_matrix211);
+colormap("parula");
+colorbar;
+title('Connectivity Matrix');
+clim([-1,1]);
+
+%%
+
+% Take the lower triangle under the diagonal.
+
+triangle111 = tril(con_matrix111, -1);
+triangle112 = tril(con_matrix112, -1);
+triangle121 = tril(con_matrix121, -1); 
+triangle122 = tril(con_matrix122, -1);
+triangle211 = tril(con_matrix211, -1);
+triangle212 = tril(con_matrix212, -1);
+
+%%
+
+% Now we vectorize these triangles
+
+triangle111 = triangle111(:);
+triangle112 = triangle112(:);
+triangle121 = triangle121(:);
+triangle122 = triangle122(:);
+triangle211 = triangle211(:);
+triangle212 = triangle212(:);
+
+%%
+
+% Now we compute correlations between them. 
+
+% 111 and 121
+
+corr111_121 = corr(triangle111, triangle121);
+
+% 111 and 112 
+
+corr111_112 = corr(triangle111, triangle112);
+
+% 111 and 211 
+
+cor111_211 = corr(triangle111, triangle211);
+
+% 111 and 122
+
+cor111_122 = corr(triangle111, triangle122);
+
+%% 
+
+%Lastly the scatteplot is made. 
+
+% 111 and 121 
+
+figure;
+scatter(triangle111, triangle121, 'filled');
+title("Scatteplot_111_121 (Correlation = ' num2str(corr_111_121) ");
+grid on;
+
+% 111 and 112 
+
+figure;
+scatter(triangle111, triangle112, 'filled');
+title("Scatteplot_111_112 (Correlation = ' num2str(corr_111_112) ");
+grid on;
+
+% 111 and 211 
+
+figure;
+scatter(triangle111, triangle211, 'filled');
+title("Scatteplot_111_211 (Correlation = ' num2str(corr_111_211) ");
+grid on;
+
+% 111 and 122
+
+figure;
+scatter(triangle111, triangle122, 'filled');
+title("Scatteplot_111_122 (Correlation = ' num2str(corr_111_122) ");
+grid on;
+
+%% Now we combine the plots 
+
+figure; 
+scatter(triangle111, triangle121, 'r', 'filled', 'MarkerFaceAlpha', 0.3);
+hold on;
+scatter(triangle111, triangle112, 'g', 'filled', 'MarkerFaceAlpha', 0.3);
+scatter(triangle111, triangle211, 'b', 'filled', 'MarkerFaceAlpha', 0.3);
+scatter(triangle111, triangle122, 'y', 'filled', 'MarkerEdgeAlpha' , 0.3, 'MarkerFaceAlpha');
+hold off; 
+
+
+
+
+
+
+
+
+
