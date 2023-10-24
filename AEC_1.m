@@ -76,15 +76,3 @@ aec_value3 = corr2(envelope_sub01ses01head01, envelope_sub02ses01head01);
 % Changing head model and session. 
 aec_value4 = corr2(envelope_sub01ses01head01, envelope_sub01ses02head02);
 
-
-%% Conclusions (if the code is correct of course).
-
-% The correlattion between differnet sessions using the same person and
-% head model is strangely low I would say.The correlation when only changing the head model 
-% indicates that the head model has an effect but nothing extreme. The
-% correlation when only changing the sensor data is pretty high considering
-% these are two different people. It appears that the influence of changing
-% the data and changing the head model is somewhat equal. 
-
-
-
