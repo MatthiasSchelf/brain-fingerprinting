@@ -127,7 +127,7 @@ ylabel('Activation');
 
 % Now this looks a bit strange as the time domain is only 272 time points long.
 
-%% Redo the first parst so that we can do the AEC with the correct filtered data. 
+%% Redo the first parts so that we can do the AEC with the correct filtered data. 
 
 %% Combining sensordata and head model
  
