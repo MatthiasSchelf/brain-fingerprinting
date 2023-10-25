@@ -125,6 +125,10 @@ title(['Filtered Data - Sensor ', num2str(sensor)]);
 xlabel('Time');
 ylabel('Activation');
 
+% Now this looks a bit strange as the time domain is only 272 time points long.
+
+%% Redo the first parst so that we can do the AEC with the correct filtered data. 
+
 %% Combining sensordata and head model
  
 sub01ses01head01 = kernel_sub01 * beta_sub01ses01;
