@@ -6,7 +6,7 @@
 
 %%
 
-brainstor
+brainstorm
 
 %% Participant 1
 
