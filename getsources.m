@@ -23,8 +23,12 @@ else
     [U, S, V] = svd(constrained_gain, 'econ');
     s = diag(S);
     s_filt = s ./ (s.^2 + 0.05);
-    kernel_identity = V * diag(s_filt) * U';
-    sources = (kernel_identity * F)';
+    K = V * diag(s_filt) * U';  % MNE kernel
+    % Compute variance of each source (diagonal of KK')
+    kernel_power = sqrt(sum(K.^2, 2));  % same as sqrt(diag(K*K'))
+    % Normalize each row to unit variance (sLORETA step)
+    kernel_sLORETA = bsxfun(@rdivide, K, kernel_power + eps);  % eps for numerical stability
+    sources = (kernel_sLORETA * F)';
 end
 if ~isempty(atlas)
     nregions=length(atlas);
